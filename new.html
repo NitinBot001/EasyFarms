@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #chat-box { width: 50%; margin: auto; height: 400px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; }
+        #message-input { width: 60%; padding: 10px; }
+        button { padding: 10px; cursor: pointer; }
+        .user-message { text-align: right; color: blue; }
+        .ai-message { text-align: left; color: green; }
+    </style>
+</head>
+<body>
+    <h1>AI Chat</h1>
+    <div id="chat-box"></div>
+    <input type="text" id="message-input" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        let convid = null;
+
+        async function startConversation() {
+            const response = await fetch("http://127.0.0.1:3000/start_conversation", { method: "POST" });
+            const data = await response.json();
+            convid = data.convid;
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById("message-input");
+            const chatBox = document.getElementById("chat-box");
+            const userMessage = input.value;
+            if (!userMessage) return;
+            
+            chatBox.innerHTML += `<p class='user-message'>You: ${userMessage}</p>`;
+            input.value = "";
+            
+            const response = await fetch("http://127.0.0.1:3000/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ convid, message: userMessage })
+            });
+            
+            const data = await response.json();
+            chatBox.innerHTML += `<p class='ai-message'>AI: ${data.response}</p>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+        
+        window.onload = startConversation;
+    </script>
+</body>
+</html>
