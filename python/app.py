@@ -8,10 +8,10 @@ from supabase import create_client, Client
 app = Flask(__name__)
 
 # Configuration
-TOGETHER_API_KEY = "your_together_api_key"
+TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
 TOGETHER_MODEL = "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free"
-SUPABASE_URL = "SUPABASE_URL"
-SUPABASE_KEY = "SUPABASE_API"
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_API")
 
 # Initialize Supabase client
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
