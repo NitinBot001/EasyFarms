@@ -2,15 +2,16 @@ from flask import Flask, request, jsonify, render_template
 import requests
 import random
 import string
+import os
 from supabase import create_client, Client
 
 app = Flask(__name__)
 
 # Configuration
-TOGETHER_API_KEY = "your_together_api_key"
+TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
 TOGETHER_MODEL = "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free"
-SUPABASE_URL = "https://xxzihgrcrgbfckawfkxg.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh4emloZ3JjcmdiZmNrYXdma3hnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEwMzc1OTEsImV4cCI6MjA1NjYxMzU5MX0._Af6Ko0QaNrB_HSPxRJwHa2f7T6e7VkLdFe02434nYc"
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_API")
 
 # Initialize Supabase client
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
