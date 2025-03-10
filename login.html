@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Supabase Auth</title>
+    <link rel="stylesheet" href="css/login/style.css">
+    <script defer src="js/login/script.js"></script>
+</head>
+<body>
+    <div class="container" id="language-selection">
+        <h2>Select Language</h2>
+        <select id="language">
+            <option value="en">English</option>
+            <option value="hi">Hindi</option>
+            <option value="es">Spanish</option>
+        </select>
+        <button onclick="saveLanguage()">Continue</button>
+    </div>
+
+    <div class="container" id="auth-container" style="display: none;">
+        <div id="auth-box">
+            <h2>Login</h2>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button onclick="login()">Login</button>
+            <p>Don't have an account? <a href="#" onclick="toggleSignup()">Sign up</a></p>
+        </div>
+
+        <div id="signup-box" style="display: none;">
+            <h2>Sign Up</h2>
+            <input type="text" id="signup-fullname" placeholder="Full Name" required>
+            <input type="email" id="signup-email" placeholder="Email" required>
+            <input type="password" id="signup-password" placeholder="Password" required>
+            <input type="password" id="signup-confirm-password" placeholder="Confirm Password" required>
+            <input type="text" id="signup-mobile" placeholder="Mobile Number" required>
+
+            <h3>Address Details</h3>
+            <input type="text" id="signup-village" placeholder="Village/City Name" required>
+            <input type="text" id="signup-district" placeholder="District Name" required>
+            <input type="text" id="signup-pincode" placeholder="Pincode" required>
+            <input type="text" id="signup-tahseel" placeholder="Tahseel" required>
+            <input type="text" id="signup-block" placeholder="Block" required>
+            <input type="text" id="signup-state" placeholder="State" required>
+            <input type="text" id="signup-country" placeholder="Country" required>
+
+            <button onclick="signup()">Sign Up</button>
+            <p>Already have an account? <a href="#" onclick="toggleSignup()">Login</a></p>
+        </div>
+    </div>
+</body>
+</html>

@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="css/home/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/home/chatbot.js"></script>
+    <link rel="stylesheet" href="css/home/chatbot.css">
 </head>
 <body>
     <div class="container">
@@ -24,6 +26,39 @@
         </header>
 
         <main>
+            <div>
+                
+    <!-- Chat Popup Modal -->
+    <div class="chat-modal" id="chatModal">
+        <div class="chat-header">
+            <h3>Chat with AI</h3>
+            <span class="close-btn" onclick="closeChatModal()">×</span>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <!-- AI's initial message -->
+            <div class="chat-message ai-message">नमस्ते! आज मैं आपकी मक्का की फसल के साथ आपकी मदद कैसे कर सकता हूँ?</div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="userInput" placeholder="Type your message..." />
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <!-- Language Selection Modal -->
+    <div class="lang-modal" id="langModal">
+        <h3>Select Your Language</h3>
+        <button onclick="setLanguage('hi')">हिंदी (Hindi)</button>
+        <button onclick="setLanguage('en')">English</button>
+        <button onclick="setLanguage('ta')">தமிழ் (Tamil)</button>
+        <button onclick="setLanguage('te')">తెలుగు (Telugu)</button>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+            </div>
+
+
             <section class="weather-section">
                 <h2>Today's Weather</h2>
                 <div class="weather-cards" id="weather-container">
@@ -43,7 +78,7 @@
                     </div>
             
                     <!-- Talk to AI -->
-                    <div class="action-item">
+                    <div class="action-item" onclick="openChatModal()">
                         <div class="action-icon">
                             <i class="fas fa-microphone"></i>
                         </div>
