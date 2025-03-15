@@ -249,7 +249,7 @@ document.getElementById('profile-close-btn').addEventListener('click', closeProf
 document.getElementById("logoutBtn").addEventListener("click", () => {
     signOut(auth).then(() => {
         console.log("User signed out");
-        window.location.href = "../Easyfarms/login/login.html"; // 🔹 Redirect to login page
+        window.location.href = "../login/login.html"; // 🔹 Redirect to login page
     }).catch((error) => {1
         console.error("Logout Error:", error.message);
     });
@@ -258,7 +258,7 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
 function logout() {
     signOut(auth).then(() => {
         console.log("User signed out");
-        window.location.href = "../login.html"; // 🔹 Redirect to login page
+        window.location.href = "../login/login.html"; // 🔹 Redirect to login page
     }).catch((error) => {
         console.error("Logout Error:", error.message);
     });
