@@ -18,6 +18,8 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+
+
 // ✅ Toggle Between Forms
 window.toggleForms = function() {
     const signupSection = document.getElementById("signupSection");
@@ -95,6 +97,7 @@ window.forgotPassword = async function() {
         }
     }
 };
+
 
 // ✅ Attach Event Listeners
 document.getElementById("signupForm").addEventListener("submit", signUpUser);

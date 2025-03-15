@@ -211,9 +211,9 @@ const auth = getAuth(app);
 // Authentication check
 onAuthStateChanged(auth, (user) => {
   if (!user) {
-    window.location.href = "../login.html";
+    window.location.href = "/login/login.html";
   } else {
-    console.log("User is logged in:", user.email);
+    console.log("User is logged in:", user.full_name);
     // initializeApp();
   }
 });
@@ -223,7 +223,7 @@ function openProfileModal() {
     const user = auth.currentUser;
     if (user) {
         document.getElementById('userPhoto').src = user.photoURL || 'default-avatar.png';
-        document.getElementById('userName').textContent = user.full_name || 'Anonymous';
+        document.getElementById('userName').textContent = user.email || 'Anonymous';
     }
     document.getElementById('profileModal').style.display = 'block';
     document.getElementById('profileOverlay').style.display = 'block';
