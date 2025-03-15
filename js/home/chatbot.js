@@ -118,6 +118,7 @@ async function sendMessage() {
         console.error('Error:', error);
         const errorMessage = document.createElement('div');
         errorMessage.className = 'chat-message ai-message';
+        localStorage.removeItem('gemini_url'); // Remove invalid URL
         errorMessage.textContent = 'Sorry, something went wrong. Please try again.';
         chatBody.appendChild(errorMessage);
     }

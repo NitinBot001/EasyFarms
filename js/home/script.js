@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // Usage example
 getDistrictFromLocation().then((district) => {
     if (district) {
-        console.log('District:', district);
+        // console.log('District:', district);
         city = district;
         fetchWeather();
     } else {

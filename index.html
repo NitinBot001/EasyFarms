@@ -9,14 +9,31 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="js/home/chatbot.js"></script>
     <link rel="stylesheet" href="css/home/chatbot.css">
+    <link rel="stylesheet" href="css/home/profile.css">
+    <script type="module" src="js/home/profile.js"></script>
 </head>
 <body>
+    <!-- Profile Popup Modal -->
+<div class="profile-modal" id="profileModal">
+    <div class="profile-header">
+        <h3>User Profile</h3>
+        <span id="profile-close-btn" class="close-btn">x</span>
+    </div>
+    <div class="profile-body">
+        <img id="userPhoto" src="" alt="User Photo">
+        <p id="userName">User Name</p>
+        <button onclick="updateProfile()">Update Profile</button>
+        <button onclick="getAppInfo()">Get App Info</button>
+        <button id="logoutBtn" onclick="logout()">Logout</button>
+    </div>
+</div>
+<div class="overlay" id="profileOverlay" onclick="closeProfileModal()"></div>
     <div class="container">
         <header>
             <div class="logo">
                 <span class="easy">Easy</span><span class="farms">Farms</span>
             </div>
-            <div class="profile-icon">
+            <div id="profile-icon" class="profile-icon">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="50" cy="50" r="45" fill="none" stroke="black" stroke-width="3"/>
                     <circle cx="50" cy="40" r="15" fill="none" stroke="black" stroke-width="3"/>
@@ -175,5 +192,78 @@
     </div>
 
     <script src="js/home/script.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyABy1Q_9PPYQ7iJHQKAjTCjxJMXQnfEANw",
+  authDomain: "agrigo-api.firebaseapp.com",
+  projectId: "agrigo-api",
+  storageBucket: "agrigo-api.appspot.com",
+  messagingSenderId: "240442152969",
+  appId: "1:240442152969:web:be242afbdb03cadf37c0d8"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// Authentication check
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = "/login/login.html";
+  } else {
+    console.log("User is logged in:", user.email);
+    // initializeApp();
+  }
+});
+document.getElementById('profile-icon').addEventListener('click', openProfileModal);
+
+function openProfileModal() {
+    const user = auth.currentUser;
+    if (user) {
+        document.getElementById('userPhoto').src = user.photoURL || 'default-avatar.png';
+        document.getElementById('userName').textContent = user.full_name || 'Anonymous';
+    }
+    document.getElementById('profileModal').style.display = 'block';
+    document.getElementById('profileOverlay').style.display = 'block';
+}
+
+function closeProfileModal() {
+    document.getElementById('profileModal').style.display = 'none';
+    document.getElementById('profileOverlay').style.display = 'none';
+}
+
+function updateProfile() {
+    // Add your update profile logic here
+    alert('Update Profile clicked');
+}
+
+function getAppInfo() {
+    // Add your get app info logic here
+    alert('Get App Info clicked');
+}
+document.getElementById('profile-close-btn').addEventListener('click', closeProfileModal);
+
+// ✅ Logout Function
+document.getElementById("logoutBtn").addEventListener("click", () => {
+    signOut(auth).then(() => {
+        console.log("User signed out");
+        window.location.href = "/login/login.html"; // 🔹 Redirect to login page
+    }).catch((error) => {
+        console.error("Logout Error:", error.message);
+    });
+});
+
+function logout() {
+    signOut(auth).then(() => {
+        console.log("User signed out");
+        window.location.href = "../login.html"; // 🔹 Redirect to login page
+    }).catch((error) => {
+        console.error("Logout Error:", error.message);
+    });
+
+}
+    </script>
 </body>
 </html>
