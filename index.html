@@ -268,7 +268,6 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-<<<<<<< HEAD
         // Authentication check
         onAuthStateChanged(auth, (user) => {
             if (!user) {
@@ -279,18 +278,6 @@
             }
         });
         document.getElementById('profile-icon').addEventListener('click', openProfileModal);
-=======
-// Authentication check
-onAuthStateChanged(auth, (user) => {
-  if (!user) {
-    window.location.href = "login/login.html";
-  } else {
-    console.log("User is logged in:", user.full_name);
-    // initializeApp();
-  }
-});
-document.getElementById('profile-icon').addEventListener('click', openProfileModal);
->>>>>>> 868b6630a68273800c14dd9d60b5d3496292c188
 
         function openProfileModal() {
             const user = auth.currentUser;
@@ -318,7 +305,6 @@ document.getElementById('profile-icon').addEventListener('click', openProfileMod
         }
         document.getElementById('profile-close-btn').addEventListener('click', closeProfileModal);
 
-<<<<<<< HEAD
         // ✅ Logout Function
         document.getElementById("logoutBtn").addEventListener("click", () => {
             signOut(auth).then(() => {
@@ -337,21 +323,12 @@ document.getElementById('profile-icon').addEventListener('click', openProfileMod
             }).catch((error) => {
                 console.error("Logout Error:", error.message);
             });
-=======
-// ✅ Logout Function
-document.getElementById("logoutBtn").addEventListener("click", () => {
-    signOut(auth).then(() => {
-        console.log("User signed out");
-        window.location.href = "login/login.html"; // 🔹 Redirect to login page
-    }).catch((error) => {1
-        console.error("Logout Error:", error.message);
-    });
-});
 
-function logout() {
-    signOut(auth).then(() => {
-        console.log("User signed out");
-        window.location.href = "login/login.html"; // 🔹 Redirect to login page
+        }
+    </script>
+</body>
+
+</html>ge
     }).catch((error) => {
         console.error("Logout Error:", error.message);
     });
