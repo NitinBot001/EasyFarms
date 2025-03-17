@@ -5,9 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EasyFarms</title>
-    <meta name="keywords" content="EasyFarms, Agriculture, Farming, Crop Management, Weather, Market Prices">
-    <meta name="description" content="EasyFarms is a platform that helps farmers manage their crops, get weather updates, market prices, and more.">
-    <meta name="keywords" content="EasyFarms, agriculture, farming, crops, weather, market prices, AI, chatbot">
     <link rel="stylesheet" href="css/home/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -312,7 +309,7 @@
         document.getElementById("logoutBtn").addEventListener("click", () => {
             signOut(auth).then(() => {
                 console.log("User signed out");
-                window.location.href = "login/login.html"; // 🔹 Redirect to login page
+                window.location.href = "/login/login.html"; // 🔹 Redirect to login page
             }).catch((error) => {
                 1
                 console.error("Logout Error:", error.message);
@@ -322,12 +319,12 @@
         function logout() {
             signOut(auth).then(() => {
                 console.log("User signed out");
-                window.location.href = "login/login.html"; // 🔹 Redirect to login page
+                window.location.href = "/login/login.html"; // 🔹 Redirect to login page
             }).catch((error) => {
                 console.error("Logout Error:", error.message);
             });
 
         }
     </script>
-    </body>
+</body>
 </html>
