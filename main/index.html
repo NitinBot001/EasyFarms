@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyFarms</title>
+    <link rel="stylesheet" href="css/home/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/home/chatbot.js"></script>
+    <link rel="stylesheet" href="css/home/chatbot.css">
+    <link rel="stylesheet" href="css/home/profile.css">
+    <script type="module" src="js/home/profile.js"></script>
+</head>
+
+<body>
+    <!-- Profile Popup Modal -->
+    <div class="profile-modal" id="profileModal">
+        <div class="profile-header">
+            <h3>User Profile</h3>
+            <span id="profile-close-btn" class="close-btn">x</span>
+        </div>
+        <div class="profile-body">
+            <img id="userPhoto" src="" alt="User Photo">
+            <p id="userName">User Name</p>
+            <button onclick="updateProfile()">Update Profile</button>
+            <button onclick="getAppInfo()">Get App Info</button>
+            <button id="logoutBtn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+    <div class="overlay" id="profileOverlay" onclick="closeProfileModal()"></div>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <span class="easy">Easy</span><span class="farms">Farms</span>
+            </div>
+            <div id="profile-icon" class="profile-icon">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="black" stroke-width="3" />
+                    <circle cx="50" cy="40" r="15" fill="none" stroke="black" stroke-width="3" />
+                    <path d="M25,85 C25,65 75,65 75,85" fill="none" stroke="black" stroke-width="3" />
+                </svg>
+            </div>
+        </header>
+
+        <main>
+            <div>
+            <section class="weather-section">
+                <h2>Today's Weather</h2>
+                <div class="weather-cards" id="weather-container">
+                    <!-- Weather cards will be dynamically inserted here -->
+                    <div class="loading">Loading weather data...</div>
+                </div>
+            </section>
+            <section>
+                <div class="quick-action-bar">
+                    <!-- Scan Disease -->
+                    <div class="action-item">
+                        <div class="action-icon">
+                            <i class="fas fa-camera"></i>
+                            <span class="notification-badge">1</span>
+                        </div>
+                        <div class="action-label">Scan Disease</div>
+                    </div>
+
+                    <!-- Talk to AI -->
+                    <div class="action-item" onclick="openChatModal()">
+                        <div class="action-icon">
+                            <i class="fas fa-microphone"></i>
+                        </div>
+                        <div class="action-label">Talk to AI</div>
+                    </div>
+
+                    <!-- Market Prices -->
+                    <div class="action-item">
+                        <div class="action-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="action-label">Market Prices</div>
+                    </div>
+
+                    <!-- Storage Check -->
+                    <div class="action-item">
+                        <div class="action-icon">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                        <div class="action-label">Storage Check</div>
+                    </div>
+                </div>
+
+            </section>
+            <section>
+                <div class="alert-section">
+                    <div class="alert-header">
+                        <div class="alert-badge">3 Alerts</div>
+                        <h3>Important Notifications</h3>
+                    </div>
+
+                    <!-- Weather Alert -->
+                    <div class="alert-card weather">
+                        <i class="fas fa-cloud-sun-rain alert-icon" style="color: #ff4444;"></i>
+                        <div class="alert-content">
+                            <div class="alert-title">Weather Alert: Heatwave Warning</div>
+                            <div class="alert-message">Maximum temperature expected to reach 42°C today</div>
+                            <div class="alert-time">Updated 15 mins ago</div>
+                        </div>
+                        <div class="close-btn" onclick="closeAlert(this)">×</div>
+                    </div>
+
+                    <!-- EMI Alert -->
+                    <div class="alert-card emi">
+                        <i class="fas fa-exclamation-triangle alert-icon" style="color: #ff9900;"></i>
+                        <div class="alert-content">
+                            <div class="alert-title">EMI Due: Tractor Loan Payment</div>
+                            <div class="alert-message">₹12,500 due in 3 days</div>
+                            <div class="progress-bar">
+                                <div class="progress"></div>
+                            </div>
+                        </div>
+                        <div class="close-btn" onclick="closeAlert(this)">×</div>
+                    </div>
+
+                    <!-- Scheme Alert -->
+                    <div class="alert-card scheme">
+                        <i class="fas fa-rupee-sign alert-icon" style="color: #4CAF50;"></i>
+                        <div class="alert-content">
+                            <div class="alert-title">New Scheme: PM-KISAN Update</div>
+                            <div class="alert-message">Next installment ₹2000 credited - Check status</div>
+                            <div class="alert-time">Government Scheme</div>
+                        </div>
+                        <div class="close-btn" onclick="closeAlert(this)">×</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <sectiion id="footer">
+            <nav>
+                <div class="nav-item active">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path
+                                d="M22 12.2039V13.725C22 17.6258 22 19.5763 20.8284 20.7881C19.6569 22 17.7712 22 14 22H10C6.22876 22 4.34315 22 3.17157 20.7881C2 19.5763 2 17.6258 2 13.725V12.2039C2 9.91549 2 8.77128 2.5192 7.82274C3.0384 6.87421 3.98695 6.28551 5.88403 5.10813L7.88403 3.86687C9.88939 2.62229 10.8921 2 12 2C13.1079 2 14.1106 2.62229 16.116 3.86687L18.116 5.10812C20.0131 6.28551 20.9616 6.87421 21.4808 7.82274"
+                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                            <path d="M15 18H9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                        </g>
+                    </svg>
+                    <span>Home</span>
+                </div>
+                <div class="nav-item">
+                    <svg fill="currentColor" viewBox="0 0 128 128" id="Layer_1" version="1.1" xml:space="preserve"
+                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                        stroke="currentColor">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <g>
+                                <path
+                                    d="M64,42c-13.2,0-24,10.8-24,24s10.8,24,24,24s24-10.8,24-24S77.2,42,64,42z M64,82c-8.8,0-16-7.2-16-16s7.2-16,16-16 s16,7.2,16,16S72.8,82,64,82z">
+                                </path>
+                                <path
+                                    d="M64,100.8c-14.9,0-29.2,6.2-39.4,17.1l-2.7,2.9l5.8,5.5l2.7-2.9c8.8-9.4,20.7-14.6,33.6-14.6s24.8,5.2,33.6,14.6l2.7,2.9 l5.8-5.5l-2.7-2.9C93.2,107.1,78.9,100.8,64,100.8z">
+                                </path>
+                                <path d="M97,47.9v8c9.4,0,18.1,3.8,24.6,10.7l5.8-5.5C119.6,52.7,108.5,47.9,97,47.9z">
+                                </path>
+                                <path
+                                    d="M116.1,20c0-10.5-8.6-19.1-19.1-19.1S77.9,9.5,77.9,20S86.5,39.1,97,39.1S116.1,30.5,116.1,20z M85.9,20 c0-6.1,5-11.1,11.1-11.1s11.1,5,11.1,11.1s-5,11.1-11.1,11.1S85.9,26.1,85.9,20z">
+                                </path>
+                                <path d="M31,47.9c-11.5,0-22.6,4.8-30.4,13.2l5.8,5.5c6.4-6.9,15.2-10.7,24.6-10.7V47.9z">
+                                </path>
+                                <path
+                                    d="M50.1,20C50.1,9.5,41.5,0.9,31,0.9S11.9,9.5,11.9,20S20.5,39.1,31,39.1S50.1,30.5,50.1,20z M31,31.1 c-6.1,0-11.1-5-11.1-11.1S24.9,8.9,31,8.9s11.1,5,11.1,11.1S37.1,31.1,31,31.1z">
+                                </path>
+                            </g>
+                        </g>
+                    </svg>
+                    <span>Community</span>
+                </div>
+                <div class="nav-item">
+                    <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                        stroke="currentColor" stroke-width="0.00024000000000000003">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path
+                                d="M2.7,9.45a4.235,4.235,0,0,0,.3.3V22a1,1,0,0,0,1,1H20a1,1,0,0,0,1-1V9.752a4.235,4.235,0,0,0,.3-.3,4,4,0,0,0,.731-3.456L20.97,1.758A1,1,0,0,0,20,1H4a1,1,0,0,0-.97.758L1.972,5.994A4,4,0,0,0,2.7,9.45ZM13,21H11V16h2Zm6,0H15V15a1,1,0,0,0-1-1H10a1,1,0,0,0-1,1v6H5V10.9A3.989,3.989,0,0,0,8.914,9.61c.026.03.053.059.08.089A4.086,4.086,0,0,0,12.041,11a4.039,4.039,0,0,0,2.965-1.3c.027-.03.054-.059.08-.089A3.989,3.989,0,0,0,19,10.9ZM3.911,6.479,4.781,3H19.219l.87,3.479A2.029,2.029,0,0,1,18.12,9,2.041,2.041,0,0,1,16.1,7.14l-.042-.5a1,1,0,0,0-1.993.166v0a2.006,2.006,0,0,1-.529,1.539A2.059,2.059,0,0,1,11.959,9,2.029,2.029,0,0,1,9.937,6.806v0a1,1,0,0,0-.914-1.079.989.989,0,0,0-1.079.913l-.042.5A2.041,2.041,0,0,1,5.88,9,2.029,2.029,0,0,1,3.911,6.479Z">
+                            </path>
+                        </g>
+                    </svg>
+                    <span>Market</span>
+                </div>
+                <div class="nav-item">
+                    <svg fill="currentColor" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32" xml:space="preserve"
+                        width="149px" height="149px">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path id="agriculture_1_"
+                                d="M17.396,29.111c-0.682,0-1.347-0.261-1.833-0.747c-0.711-0.711-0.939-1.798-0.581-2.77l0.058-0.155 l0.156-0.058c0.973-0.356,2.058-0.131,2.769,0.58c0.71,0.711,0.938,1.797,0.58,2.769l-0.058,0.156l-0.156,0.058 C18.025,29.057,17.709,29.111,17.396,29.111z M15.605,26.006c-0.183,0.665-0.008,1.375,0.466,1.849 c0.474,0.475,1.183,0.648,1.849,0.466c0.183-0.665,0.008-1.375-0.466-1.849C16.981,25.997,16.27,25.825,15.605,26.006z M12.902,24.378l-0.164-0.028c-1.021-0.173-1.85-0.911-2.112-1.881c-0.262-0.97,0.081-2.025,0.875-2.69l0.127-0.106l0.164,0.028 c1.021,0.173,1.85,0.911,2.113,1.882c0.262,0.97-0.081,2.025-0.875,2.689L12.902,24.378z M11.838,20.445 c-0.489,0.485-0.691,1.188-0.516,1.836c0.175,0.646,0.704,1.151,1.372,1.323c0.49-0.484,0.692-1.188,0.517-1.835 C13.035,21.123,12.506,20.617,11.838,20.445z M17.716,21.902c-0.312,0-0.629-0.055-0.935-0.167l-0.156-0.058l-0.058-0.155 c-0.358-0.972-0.13-2.059,0.58-2.77c0.712-0.709,1.798-0.938,2.769-0.58l0.156,0.058l0.058,0.155 c0.358,0.972,0.131,2.059-0.581,2.77C19.062,21.643,18.398,21.902,17.716,21.902z M17.191,21.111 c0.664,0.183,1.375,0.009,1.849-0.466c0.475-0.474,0.649-1.185,0.466-1.849c-0.664-0.185-1.374-0.009-1.85,0.466 C17.183,19.736,17.009,20.446,17.191,21.111z M12.873,12.691c-0.683,0-1.347-0.261-1.834-0.748c-0.71-0.71-0.938-1.797-0.58-2.768 l0.058-0.156l0.156-0.058c0.97-0.357,2.058-0.13,2.769,0.58l0,0c0.71,0.71,0.938,1.797,0.58,2.769l-0.058,0.156l-0.156,0.058 C13.503,12.636,13.186,12.691,12.873,12.691z M11.083,9.585c-0.183,0.665-0.008,1.375,0.466,1.849 c0.474,0.475,1.183,0.65,1.849,0.466c0.183-0.665,0.008-1.375-0.465-1.85C12.458,9.578,11.748,9.402,11.083,9.585z M15.999,31.36 c-4.489,0-8.163-3.557-8.353-8H1v-0.72h6.999c0.199,0,0.36,0.161,0.36,0.36c0,4.213,3.427,7.64,7.64,7.64s7.64-3.427,7.64-7.64 c0-0.199,0.161-0.36,0.36-0.36H31v0.721h-6.648C24.162,27.804,20.488,31.36,15.999,31.36z M23.631,17.36H8.705 c-2.941,0-6.067-2.195-6.067-6.262c0-3.466,1.557-5.778,5.374-7.978l3.579-2.034c0.565-0.318,1-0.447,1.505-0.447 c1.126,0,1.734,0.895,1.734,1.736c0,0.773-0.429,1.232-1.072,1.684l-1.551,1.036H24.77c0.994,0,1.803,0.809,1.803,1.802 c0,0.408-0.137,0.785-0.367,1.088h0.351c0.004,0,0.008,0,0.011,0c0.474,0,0.922,0.185,1.262,0.523 c0.343,0.341,0.532,0.793,0.532,1.274c0,0.994-0.81,1.803-1.805,1.803H26.21c0.228,0.302,0.362,0.677,0.362,1.083 c0,0.897-0.659,1.644-1.519,1.78c0.238,0.306,0.38,0.689,0.38,1.105C25.434,16.55,24.625,17.36,23.631,17.36z M13.095,1.36 c-0.376,0-0.699,0.099-1.151,0.354L8.368,3.746C4.81,5.797,3.357,7.928,3.357,11.099c0,3.599,2.755,5.542,5.348,5.542h14.926 c0.597,0,1.082-0.487,1.082-1.085c0-0.597-0.485-1.083-1.082-1.083H16v-0.72h8.77c0.597,0,1.082-0.486,1.082-1.083 s-0.485-1.083-1.082-1.083H16v-0.72h10.556c0.598,0,1.084-0.486,1.084-1.083c0-0.288-0.113-0.559-0.319-0.764 c-0.203-0.203-0.472-0.314-0.756-0.314c-0.002,0-0.004,0-0.007,0H16v-0.72h8.77c0.596-0.004,1.082-0.492,1.082-1.088 c0-0.597-0.485-1.083-1.082-1.083H11.019c-0.159,0-0.298-0.104-0.345-0.255c-0.046-0.152,0.013-0.316,0.145-0.404l2.531-1.69 c0.638-0.448,0.76-0.729,0.76-1.09C14.109,1.887,13.792,1.36,13.095,1.36z">
+                            </path>
+                            <rect id="_Transparent_Rectangle" style="fill:none;" width="149px" height="149px"></rect>
+                        </g>
+                    </svg>
+                    <span>My crops</span>
+                </div>
+                <div class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"></circle>
+                            <path
+                                d="M3.66122 10.6392C4.13377 10.9361 4.43782 11.4419 4.43782 11.9999C4.43781 12.558 4.13376 13.0638 3.66122 13.3607C3.33966 13.5627 3.13248 13.7242 2.98508 13.9163C2.66217 14.3372 2.51966 14.869 2.5889 15.3949C2.64082 15.7893 2.87379 16.1928 3.33973 16.9999C3.80568 17.8069 4.03865 18.2104 4.35426 18.4526C4.77508 18.7755 5.30694 18.918 5.83284 18.8488C6.07287 18.8172 6.31628 18.7185 6.65196 18.5411C7.14544 18.2803 7.73558 18.2699 8.21895 18.549C8.70227 18.8281 8.98827 19.3443 9.00912 19.902C9.02332 20.2815 9.05958 20.5417 9.15224 20.7654C9.35523 21.2554 9.74458 21.6448 10.2346 21.8478C10.6022 22 11.0681 22 12 22C12.9319 22 13.3978 22 13.7654 21.8478C14.2554 21.6448 14.6448 21.2554 14.8478 20.7654C14.9404 20.5417 14.9767 20.2815 14.9909 19.9021C15.0117 19.3443 15.2977 18.8281 15.7811 18.549C16.2644 18.27 16.8545 18.2804 17.3479 18.5412C17.6837 18.7186 17.9271 18.8173 18.1671 18.8489C18.693 18.9182 19.2249 18.7756 19.6457 18.4527C19.9613 18.2106 20.1943 17.807 20.6603 17C20.8677 16.6407 21.029 16.3614 21.1486 16.1272M20.3387 13.3608C19.8662 13.0639 19.5622 12.5581 19.5621 12.0001C19.5621 11.442 19.8662 10.9361 20.3387 10.6392C20.6603 10.4372 20.8674 10.2757 21.0148 10.0836C21.3377 9.66278 21.4802 9.13092 21.411 8.60502C21.3591 8.2106 21.1261 7.80708 20.6601 7.00005C20.1942 6.19301 19.9612 5.7895 19.6456 5.54732C19.2248 5.22441 18.6929 5.0819 18.167 5.15113C17.927 5.18274 17.6836 5.2814 17.3479 5.45883C16.8544 5.71964 16.2643 5.73004 15.781 5.45096C15.2977 5.1719 15.0117 4.6557 14.9909 4.09803C14.9767 3.71852 14.9404 3.45835 14.8478 3.23463C14.6448 2.74458 14.2554 2.35523 13.7654 2.15224C13.3978 2 12.9319 2 12 2C11.0681 2 10.6022 2 10.2346 2.15224C9.74458 2.35523 9.35523 2.74458 9.15224 3.23463C9.05958 3.45833 9.02332 3.71848 9.00912 4.09794C8.98826 4.65566 8.70225 5.17191 8.21891 5.45096C7.73557 5.73002 7.14548 5.71959 6.65205 5.4588C6.31633 5.28136 6.0729 5.18269 5.83285 5.15108C5.30695 5.08185 4.77509 5.22436 4.35427 5.54727C4.03866 5.78945 3.80569 6.19297 3.33974 7C3.13231 7.35929 2.97105 7.63859 2.85138 7.87273"
+                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                        </g>
+                    </svg>
+                    <span>More</span>
+                </div>
+            </nav>
+        </sectiion>
+    </div>
+
+    <script src="js/home/script.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyABy1Q_9PPYQ7iJHQKAjTCjxJMXQnfEANw",
+            authDomain: "agrigo-api.firebaseapp.com",
+            projectId: "agrigo-api",
+            storageBucket: "agrigo-api.appspot.com",
+            messagingSenderId: "240442152969",
+            appId: "1:240442152969:web:be242afbdb03cadf37c0d8"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Authentication check
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = "/login/login.html";
+            } else {
+                console.log("User is logged in:", user.full_name);
+                // initializeApp();
+            }
+        });
+        document.getElementById('profile-icon').addEventListener('click', openProfileModal);
+
+        function openProfileModal() {
+            const user = auth.currentUser;
+            if (user) {
+                document.getElementById('userPhoto').src = user.photoURL || 'default-avatar.png';
+                document.getElementById('userName').textContent = user.email || 'Anonymous';
+            }
+            document.getElementById('profileModal').style.display = 'block';
+            document.getElementById('profileOverlay').style.display = 'block';
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModal').style.display = 'none';
+            document.getElementById('profileOverlay').style.display = 'none';
+        }
+
+        function updateProfile() {
+            // Add your update profile logic here
+            alert('Update Profile clicked');
+        }
+
+        function getAppInfo() {
+            // Add your get app info logic here
+            alert('Get App Info clicked');
+        }
+        document.getElementById('profile-close-btn').addEventListener('click', closeProfileModal);
+
+        // ✅ Logout Function
+        document.getElementById("logoutBtn").addEventListener("click", () => {
+            signOut(auth).then(() => {
+                console.log("User signed out");
+                window.location.href = "/login/login.html"; // 🔹 Redirect to login page
+            }).catch((error) => {
+                1
+                console.error("Logout Error:", error.message);
+            });
+        });
+
+        function logout() {
+            signOut(auth).then(() => {
+                console.log("User signed out");
+                window.location.href = "/login/login.html"; // 🔹 Redirect to login page
+            }).catch((error) => {
+                console.error("Logout Error:", error.message);
+            });
+
+        }
+    </script>
+</body>
+</html>
