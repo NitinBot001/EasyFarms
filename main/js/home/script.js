@@ -263,3 +263,6 @@ getDistrictFromLocation().then((district) => {
   })
 })
 
+function diseaseDetection(){
+  window.location.href = "plant-disease-detection/disease.html";
+};

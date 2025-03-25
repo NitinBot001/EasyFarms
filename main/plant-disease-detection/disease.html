@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Disease Detection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f0f0f0; /* Fallback background */
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Camera Preview Area */
+        #cameraPreview {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensure the video fills the area */
+            z-index: 1; /* Behind the buttons */
+        }
+
+        .top-left, .top-right {
+            position: fixed;
+            top: 20px;
+            width: 50px;
+            height: 50px;
+            background: black;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2; /* Above the camera preview */
+        }
+
+        .top-left {
+            left: 20px;
+        }
+
+        .top-right {
+            right: 20px;
+        }
+
+        .bottom-buttons {
+            position: fixed;
+            bottom: 20px;
+            display: flex;
+            gap: 30px;
+            z-index: 2; /* Above the camera preview */
+        }
+
+        .button {
+            width: 60px;
+            border: #ffffff 2px solid;
+            height: 60px;
+            background: black;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .button img {
+            width: 30px;
+            height: 30px;
+            filter: invert(1); /* Make icons white */
+        }
+
+        /* Hidden file input for upload */
+        #fileInput {
+            display: none;
+        }
+
+        /* Result Display Section */
+        .result-section {
+            display: none; /* Hidden by default */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f8e1e1; /* Light pink background like in the image */
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+            z-index: 3; /* Above everything else */
+        }
+
+        .result-image {
+            width: 80%;
+            max-width: 300px;
+            border: 5px solid #d4a017; /* Gold border like in the image */
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .info-box {
+            background-color: #f5c6cb; /* Slightly darker pink for boxes */
+            width: 80%;
+            max-width: 300px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .remedy-box {
+            background-color: #f5c6cb;
+            width: 80%;
+            max-width: 300px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: left;
+        }
+
+        .remedy-box h3 {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Camera Preview -->
+    <video id="cameraPreview" autoplay playsinline></video>
+
+    <div class="top-left"><svg fill="#ffffff" viewBox="-307.2 -307.2 1638.40 1638.40" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M222.927 580.115l301.354 328.512c24.354 28.708 20.825 71.724-7.883 96.078s-71.724 20.825-96.078-7.883L19.576 559.963a67.846 67.846 0 01-13.784-20.022 68.03 68.03 0 01-5.977-29.488l.001-.063a68.343 68.343 0 017.265-29.134 68.28 68.28 0 011.384-2.6 67.59 67.59 0 0110.102-13.687L429.966 21.113c25.592-27.611 68.721-29.247 96.331-3.656s29.247 68.721 3.656 96.331L224.088 443.784h730.46c37.647 0 68.166 30.519 68.166 68.166s-30.519 68.166-68.166 68.166H222.927z"></path></g></svg></div>
+    <div class="top-right"><svg viewBox="-3.75 -3.75 32.50 32.50" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 21.5C17.1086 21.5 21.25 17.3586 21.25 12.25C21.25 7.14137 17.1086 3 12 3C6.89137 3 2.75 7.14137 2.75 12.25C2.75 17.3586 6.89137 21.5 12 21.5Z" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12.9309 8.15005C12.9256 8.39231 12.825 8.62272 12.6509 8.79123C12.4767 8.95974 12.2431 9.05271 12.0008 9.05002C11.8242 9.04413 11.6533 8.98641 11.5093 8.884C11.3652 8.7816 11.2546 8.63903 11.1911 8.47415C11.1275 8.30927 11.1139 8.12932 11.152 7.95675C11.19 7.78419 11.278 7.6267 11.405 7.50381C11.532 7.38093 11.6923 7.29814 11.866 7.26578C12.0397 7.23341 12.2192 7.25289 12.3819 7.32181C12.5446 7.39072 12.6834 7.506 12.781 7.65329C12.8787 7.80057 12.9308 7.97335 12.9309 8.15005ZM11.2909 16.5301V11.1501C11.2882 11.0556 11.3046 10.9615 11.3392 10.8736C11.3738 10.7857 11.4258 10.7057 11.4922 10.6385C11.5585 10.5712 11.6378 10.518 11.7252 10.4822C11.8126 10.4464 11.9064 10.4286 12.0008 10.43C12.094 10.4299 12.1863 10.4487 12.272 10.4853C12.3577 10.5218 12.4352 10.5753 12.4997 10.6426C12.5642 10.7099 12.6143 10.7895 12.6472 10.8767C12.6801 10.9639 12.6949 11.0569 12.6908 11.1501V16.5301C12.6908 16.622 12.6727 16.713 12.6376 16.7979C12.6024 16.8828 12.5508 16.96 12.4858 17.025C12.4208 17.09 12.3437 17.1415 12.2588 17.1767C12.1738 17.2119 12.0828 17.23 11.9909 17.23C11.899 17.23 11.8079 17.2119 11.723 17.1767C11.6381 17.1415 11.5609 17.09 11.4959 17.025C11.4309 16.96 11.3793 16.8828 11.3442 16.7979C11.309 16.713 11.2909 16.622 11.2909 16.5301Z" fill="#ffffff"></path> </g></svg></div>
+
+    <div class="bottom-buttons">
+        <div class="button" id="uploadBtn"><svg viewBox="-3.84 -3.84 31.68 31.68" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#fdfcfc"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M15 21H9C6.17157 21 4.75736 21 3.87868 20.1213C3 19.2426 3 17.8284 3 15M21 15C21 17.8284 21 19.2426 20.1213 20.1213C19.8215 20.4211 19.4594 20.6186 19 20.7487" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12 16V3M12 3L16 7.375M12 3L8 7.375" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg></div>
+        <div class="button" id="cameraBtn"><svg viewBox="-2.8 -2.8 25.60 25.60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#c29de7" stroke="#c29de7"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>image / 40 - aperture, media, capture, image icon</title> <g id="Free-Icons" stroke-width="0.7" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"> <g transform="translate(-673.000000, -600.000000)" id="Group" stroke="#ffffff" stroke-width="0.7"> <g transform="translate(671.000000, 598.000000)" id="Shape"> <circle cx="12" cy="12" r="9"> </circle> <line x1="12" y1="3" x2="15.4384781" y2="12.6277387"> </line> <line x1="4.20577125" y1="7.5" x2="14.2628766" y2="9.33606"> </line> <line x1="4.20577125" y1="16.5" x2="10.8243984" y2="8.70832125"> </line> <line x1="12" y1="21" x2="8.56152188" y2="11.3722612"> </line> <line x1="19.7942287" y1="16.5" x2="9.73712344" y2="14.66394"> </line> <line x1="19.7942288" y1="7.5" x2="13.1756016" y2="15.2916788"> </line> </g> </g> </g> </g></svg></div>
+        <div class="button" id="historyBtn"><svg width="227px" height="227px" viewBox="-3.12 -3.12 30.24 30.24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.552"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M5.07868 5.06891C8.87402 1.27893 15.0437 1.31923 18.8622 5.13778C22.6824 8.95797 22.7211 15.1313 18.9262 18.9262C15.1312 22.7211 8.95793 22.6824 5.13774 18.8622C2.87389 16.5984 1.93904 13.5099 2.34047 10.5812C2.39672 10.1708 2.775 9.88377 3.18537 9.94002C3.59575 9.99627 3.88282 10.3745 3.82658 10.7849C3.4866 13.2652 4.27782 15.881 6.1984 17.8016C9.44288 21.0461 14.6664 21.0646 17.8655 17.8655C21.0646 14.6664 21.046 9.44292 17.8015 6.19844C14.5587 2.95561 9.33889 2.93539 6.13935 6.12957L6.88705 6.13333C7.30126 6.13541 7.63535 6.47288 7.63327 6.88709C7.63119 7.3013 7.29372 7.63539 6.87951 7.63331L4.33396 7.62052C3.92269 7.61845 3.58981 7.28556 3.58774 6.8743L3.57495 4.32874C3.57286 3.91454 3.90696 3.57707 4.32117 3.57498C4.73538 3.5729 5.07285 3.907 5.07493 4.32121L5.07868 5.06891ZM11.9999 7.24992C12.4141 7.24992 12.7499 7.58571 12.7499 7.99992V11.6893L15.0302 13.9696C15.3231 14.2625 15.3231 14.7374 15.0302 15.0302C14.7373 15.3231 14.2624 15.3231 13.9696 15.0302L11.2499 12.3106V7.99992C11.2499 7.58571 11.5857 7.24992 11.9999 7.24992Z" fill="#ffffff"></path> </g></svg></div>
+    </div>
+
+    <!-- Hidden file input for upload -->
+    <input type="file" id="fileInput" accept="image/*">
+
+    <!-- Result Display Section -->
+    <div class="result-section" id="resultSection">
+        <img id="resultImage" class="result-image" src="" alt="Uploaded Image">
+        <div class="info-box" id="plantName">PLANT NAME</div>
+        <div class="info-box" id="diseaseName">DISEASE NAME</div>
+        <div class="remedy-box">
+            <h3>AI RECOMMENDATION</h3>
+            <p id="remedyText"></p>
+        </div>
+    </div>
+
+    <script>
+        // Get DOM elements
+        const cameraPreview = document.getElementById('cameraPreview');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const cameraBtn = document.getElementById('cameraBtn');
+        const fileInput = document.getElementById('fileInput');
+        const resultSection = document.getElementById('resultSection');
+        const resultImage = document.getElementById('resultImage');
+        const plantName = document.getElementById('plantName');
+        const diseaseName = document.getElementById('diseaseName');
+        const remedyText = document.getElementById('remedyText');
+
+        let stream = null;
+
+        // Start the camera preview
+        async function startCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'environment' }, // Use the rear camera
+                    audio: false
+                });
+                cameraPreview.srcObject = stream;
+            } catch (error) {
+                console.error('Error accessing camera:', error);
+                alert('Could not access the camera. Please ensure you have granted permission.');
+            }
+        }
+
+        // Stop the camera
+        function stopCamera() {
+            if (stream) {
+                const tracks = stream.getTracks();
+                tracks.forEach(track => track.stop());
+                cameraPreview.srcObject = null;
+                stream = null;
+            }
+        }
+
+        // Capture a photo from the camera preview
+        function capturePhoto() {
+            const canvas = document.createElement('canvas');
+            canvas.width = cameraPreview.videoWidth;
+            canvas.height = cameraPreview.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(cameraPreview, 0, 0, canvas.width, canvas.height);
+            return canvas.toDataURL('image/jpeg').split(',')[1]; // Return base64 string without prefix
+        }
+
+        // Convert image file to base64
+        const toBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result.split(',')[1]); // Remove the "data:image/jpeg;base64," part
+            reader.onerror = error => reject(error);
+        });
+
+        // Call the backend API
+        async function detectDisease(imgData) {
+            const url = "https://susya.onrender.com";
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ image: imgData })
+                });
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error calling API:', error);
+                return null;
+            }
+        }
+
+        // Display the result
+        function displayResult(imageSrc, result) {
+            stopCamera(); // Stop the camera when showing results
+            resultImage.src = imageSrc;
+            plantName.textContent = result.plant || 'Unknown Plant';
+            diseaseName.textContent = result.disease || 'Unknown Disease';
+            remedyText.textContent = result.remedy || 'No remedy available.';
+            resultSection.style.display = 'flex'; // Show the result section
+        }
+
+        // Start the camera when the page loads
+        window.addEventListener('load', startCamera);
+
+        // Handle Upload Button Click
+        uploadBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', async (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const imgData = await toBase64(file);
+                const imageSrc = URL.createObjectURL(file); // For displaying the image
+                const result = await detectDisease(imgData);
+                if (result) {
+                    displayResult(imageSrc, result);
+                } else {
+                    alert('Error detecting disease. Please try again.');
+                }
+            }
+        });
+
+        // Handle Camera Button Click (Capture Photo)
+        cameraBtn.addEventListener('click', async () => {
+            if (!stream) {
+                alert('Camera is not active. Please ensure you have granted permission.');
+                return;
+            }
+            const imgData = capturePhoto();
+            const imageSrc = `data:image/jpeg;base64,${imgData}`; // For displaying the image
+            const result = await detectDisease(imgData);
+            if (result) {
+                displayResult(imageSrc, result);
+            } else {
+                alert('Error detecting disease. Please try again.');
+            }
+        });
+
+        // Handle Back Arrow Click
+        document.querySelector('.top-left').addEventListener('click', () => {
+            resultSection.style.display = 'none';
+            startCamera(); // Restart the camera when going back
+        });
+    </script>
+</body>
+</html>

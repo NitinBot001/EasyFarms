@@ -20,6 +20,8 @@ const db = getFirestore(app);
 
 
 
+
+
 // ✅ Toggle Between Forms
 window.toggleForms = function() {
     const signupSection = document.getElementById("signupSection");
