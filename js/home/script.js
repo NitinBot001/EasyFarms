@@ -263,3 +263,10 @@ getDistrictFromLocation().then((district) => {
   })
 })
 
+
+function diseaseDetection(){
+  window.location.href = "plant-disease-detection/disease.html";
+};
+function warehousefinder(){
+  window.location.href = "find-warehouse/index.html";
+};

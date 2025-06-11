@@ -46,120 +46,93 @@
 
         <main>
             <div>
-
-                <!-- Chat Popup Modal -->
-                <div class="chat-modal" id="chatModal">
-                    <div class="chat-header">
-                        <h3>Chat with AI</h3>
-                        <span class="close-btn" onclick="closeChatModal()">×</span>
+                <section class="weather-section">
+                    <h2>Today's Weather</h2>
+                    <div class="weather-cards" id="weather-container">
+                        <!-- Weather cards will be dynamically inserted here -->
+                        <div class="loading">Loading weather data...</div>
                     </div>
-                    <div class="chat-body" id="chatBody">
-                        <!-- AI's initial message -->
-                        <div class="chat-message ai-message">नमस्ते! आज मैं आपकी मक्का की फसल के साथ आपकी मदद कैसे कर
-                            सकता हूँ?</div>
-                    </div>
-                    <div class="chat-input">
-                        <input type="text" id="userInput" placeholder="Type your message..." />
-                        <button onclick="sendMessage()">Send</button>
-                    </div>
-                </div>
-
-                <!-- Language Selection Modal -->
-                <div class="lang-modal" id="langModal">
-                    <h3>Select Your Language</h3>
-                    <button onclick="setLanguage('hi')">हिंदी (Hindi)</button>
-                    <button onclick="setLanguage('en')">English</button>
-                    <button onclick="setLanguage('ta')">தமிழ் (Tamil)</button>
-                    <button onclick="setLanguage('te')">తెలుగు (Telugu)</button>
-                </div>
-            </div>
-            <section class="weather-section">
-                <h2>Today's Weather</h2>
-                <div class="weather-cards" id="weather-container">
-                    <!-- Weather cards will be dynamically inserted here -->
-                    <div class="loading">Loading weather data...</div>
-                </div>
-            </section>
-            <section>
-                <div class="quick-action-bar">
-                    <!-- Scan Disease -->
-                    <div class="action-item">
-                        <div class="action-icon">
-                            <i class="fas fa-camera"></i>
-                            <span class="notification-badge">1</span>
-                        </div>
-                        <div class="action-label">Scan Disease</div>
-                    </div>
-
-                    <!-- Talk to AI -->
-                    <div class="action-item" onclick="openChatModal()">
-                        <div class="action-icon">
-                            <i class="fas fa-microphone"></i>
-                        </div>
-                        <div class="action-label">Talk to AI</div>
-                    </div>
-
-                    <!-- Market Prices -->
-                    <div class="action-item">
-                        <div class="action-icon">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <div class="action-label">Market Prices</div>
-                    </div>
-
-                    <!-- Storage Check -->
-                    <div class="action-item">
-                        <div class="action-icon">
-                            <i class="fas fa-warehouse"></i>
-                        </div>
-                        <div class="action-label">Storage Check</div>
-                    </div>
-                </div>
-
-            </section>
-            <section>
-                <div class="alert-section">
-                    <div class="alert-header">
-                        <div class="alert-badge">3 Alerts</div>
-                        <h3>Important Notifications</h3>
-                    </div>
-
-                    <!-- Weather Alert -->
-                    <div class="alert-card weather">
-                        <i class="fas fa-cloud-sun-rain alert-icon" style="color: #ff4444;"></i>
-                        <div class="alert-content">
-                            <div class="alert-title">Weather Alert: Heatwave Warning</div>
-                            <div class="alert-message">Maximum temperature expected to reach 42°C today</div>
-                            <div class="alert-time">Updated 15 mins ago</div>
-                        </div>
-                        <div class="close-btn" onclick="closeAlert(this)">×</div>
-                    </div>
-
-                    <!-- EMI Alert -->
-                    <div class="alert-card emi">
-                        <i class="fas fa-exclamation-triangle alert-icon" style="color: #ff9900;"></i>
-                        <div class="alert-content">
-                            <div class="alert-title">EMI Due: Tractor Loan Payment</div>
-                            <div class="alert-message">₹12,500 due in 3 days</div>
-                            <div class="progress-bar">
-                                <div class="progress"></div>
+                </section>
+                <section>
+                    <div class="quick-action-bar">
+                        <!-- Scan Disease -->
+                        <div class="action-item" onclick="diseaseDetection()">
+                            <div class="action-icon">
+                                <i class="fas fa-camera"></i>
+                                <span class="notification-badge">1</span>
                             </div>
+                            <div class="action-label">Scan Disease</div>
                         </div>
-                        <div class="close-btn" onclick="closeAlert(this)">×</div>
+
+                        <!-- Talk to AI -->
+                        <div class="action-item" onclick="openChatModal()">
+                            <div class="action-icon">
+                                <i class="fas fa-microphone"></i>
+                            </div>
+                            <div class="action-label">Talk to AI</div>
+                        </div>
+
+                        <!-- Market Prices -->
+                        <div class="action-item">
+                            <div class="action-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="action-label">Market Prices</div>
+                        </div>
+
+                        <!-- Storage Check -->
+                        <div onclick="warehousefinder()" class="action-item">
+                            <div class="action-icon">
+                                <i class="fas fa-warehouse"></i>
+                            </div>
+                            <div class="action-label">Warehouse Finder</div>
+                        </div>
                     </div>
 
-                    <!-- Scheme Alert -->
-                    <div class="alert-card scheme">
-                        <i class="fas fa-rupee-sign alert-icon" style="color: #4CAF50;"></i>
-                        <div class="alert-content">
-                            <div class="alert-title">New Scheme: PM-KISAN Update</div>
-                            <div class="alert-message">Next installment ₹2000 credited - Check status</div>
-                            <div class="alert-time">Government Scheme</div>
+                </section>
+                <section>
+                    <div class="alert-section">
+                        <div class="alert-header">
+                            <div class="alert-badge">3 Alerts</div>
+                            <h3>Important Notifications</h3>
                         </div>
-                        <div class="close-btn" onclick="closeAlert(this)">×</div>
+
+                        <!-- Weather Alert -->
+                        <div class="alert-card weather">
+                            <i class="fas fa-cloud-sun-rain alert-icon" style="color: #ff4444;"></i>
+                            <div class="alert-content">
+                                <div class="alert-title">Weather Alert: Heatwave Warning</div>
+                                <div class="alert-message">Maximum temperature expected to reach 42°C today</div>
+                                <div class="alert-time">Updated 15 mins ago</div>
+                            </div>
+                            <div class="close-btn" onclick="closeAlert(this)">×</div>
+                        </div>
+
+                        <!-- EMI Alert -->
+                        <div class="alert-card emi">
+                            <i class="fas fa-exclamation-triangle alert-icon" style="color: #ff9900;"></i>
+                            <div class="alert-content">
+                                <div class="alert-title">EMI Due: Tractor Loan Payment</div>
+                                <div class="alert-message">₹12,500 due in 3 days</div>
+                                <div class="progress-bar">
+                                    <div class="progress"></div>
+                                </div>
+                            </div>
+                            <div class="close-btn" onclick="closeAlert(this)">×</div>
+                        </div>
+
+                        <!-- Scheme Alert -->
+                        <div class="alert-card scheme">
+                            <i class="fas fa-rupee-sign alert-icon" style="color: #4CAF50;"></i>
+                            <div class="alert-content">
+                                <div class="alert-title">New Scheme: PM-KISAN Update</div>
+                                <div class="alert-message">Next installment ₹2000 credited - Check status</div>
+                                <div class="alert-time">Government Scheme</div>
+                            </div>
+                            <div class="close-btn" onclick="closeAlert(this)">×</div>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
         </main>
 
         <sectiion id="footer">
@@ -206,7 +179,7 @@
                     </svg>
                     <span>Community</span>
                 </div>
-                <div class="nav-item">
+                <div id="marketplace" onclick="window.location.href='marketplace/index.html'" class="nav-item">
                     <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
                         stroke="currentColor" stroke-width="0.00024000000000000003">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -325,6 +298,10 @@
             });
 
         }
+        function warehousefinder() {
+            window.location.href = "find-warehouse/index.html";
+        };
     </script>
 </body>
+
 </html>

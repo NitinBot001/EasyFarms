@@ -4,12 +4,13 @@ function openChatModal() {
     const defaultLang = localStorage.getItem('default_lang');
     if (!defaultLang) {
         // Show language selection modal
-        document.getElementById('langModal').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
+        localStorage.setItem('default_lang', 'hi'); // Default to Hindi
+        window.location.href = "chat/chat.html";
+
     } else {
         // Open chat modal
-        document.getElementById('chatModal').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
+        window.location.href = "chat/chat.html";
+
     }
 }
 
